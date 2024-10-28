@@ -1,6 +1,7 @@
 from typing import List
 import logging
 from sentence_transformers import SentenceTransformer
+# from transformers import AutoTokenizer
 
 class EmbeddingService:
     def __init__(self, model, logger=None):
@@ -22,17 +23,25 @@ class EmbeddingService:
             RuntimeError: If there is an error during embedding creation.
         """
         try:
-          if not isinstance(text, str) or not text.strip():
-              raise ValueError("Input text must be a non-empty string.")
+            if not isinstance(text, str) or not text.strip():
+                raise ValueError("Input text must be a non-empty string.")
 
-          self.logger.debug(f"Creating embedding for text: {text[:50]}...")
+            self.logger.debug(f"Creating embedding for text: {text[:50]}...")
 
-          embedding = self.model.encode([text])
+            # # Load the tokenizer
+            # tokenizer = AutoTokenizer.from_pretrained("sentence-transformers/all-mpnet-base-v2")
 
-          if embedding is None or len(embedding) == 0:
-              raise RuntimeError("Failed to create a valid embedding.")
+            # # Tokenize and count tokens
+            # tokens = tokenizer.tokenize(text)
+            # print(f"Text: {text}")
+            # print(f"Number of tokens: {len(tokens)}")
+            
+            embedding = self.model.encode([text])
 
-          return embedding[0].tolist() 
+            if embedding is None or len(embedding) == 0:
+                raise RuntimeError("Failed to create a valid embedding.")
+
+            return embedding[0].tolist() 
 
         except ValueError as ve:
             self.logger.error(f"ValueError: {ve}")
